@@ -1,0 +1,5 @@
+<view >
+    <view wx:for="{{deviceList}}" wx:key="index">
+        {{item.name}}
+    </view>
+</view>
