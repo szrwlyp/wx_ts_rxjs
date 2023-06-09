@@ -94,6 +94,9 @@ export class User {
                 if (code === 0) {
                   that.userLoginInfo = data;
                   wx.setStorageSync("sessionId", data.sessionid);
+                  console.log(that);
+                  that.options.onUserInfoLoaded &&
+                    that.options.onUserInfoLoaded();
                   return data.sessionid;
                 }
                 return throwError(() => new Error("登录失败"));

@@ -4,6 +4,7 @@ import { User, UserOptions } from "../../models/demo/user";
 class UserStore extends Store<Pick<User, "motto" | "userInfo">> {
   options: UserOptions | undefined;
   user: User;
+  userLoginInfo: object;
   constructor(options?: UserOptions) {
     super();
     this.options = options;
@@ -11,13 +12,15 @@ class UserStore extends Store<Pick<User, "motto" | "userInfo">> {
       motto: "1111",
       userInfo: {},
     };
+    this.userLoginInfo = {};
 
     this.user = new User({
       onUserInfoLoaded: () => {
         console.log(this.user);
         this.data.motto = this.user.motto;
         this.data.userInfo = this.user.userInfo;
-        console.log(this.user.userInfo);
+        this.userLoginInfo = this.user.userLoginInfo;
+        console.warn("onUserInfoLoaded：", this.user);
         this.update();
         // this.update("userPage");
       },

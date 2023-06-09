@@ -1,7 +1,7 @@
 import { Observable, retry, timer, delay } from "rxjs";
-import { User } from "../models/demo/user";
 import { BASE_URL } from "../config/index";
 import { HttpAttribute, HttpParameter, HttpMethod } from "./types";
+import userStore from "../stores/demo/user-store";
 
 /**
  * Http状态码有：1xx，2xx，3xx，4xx，5xx。
@@ -21,16 +21,16 @@ const HttpStatus = new Map([
   [
     "2",
     (subscriber: any, res: any) => {
-      console.log(res);
+      // console.log(res);
 
       if (res.code === 0) {
         subscriber.next(res);
         subscriber.complete();
-      } else if (res.code === NotLogin) {
+      }
+      if (res.code === NotLogin) {
         ++NotLoginNum;
         if (NotLoginNum === 1) {
-          let userModels = new User();
-          userModels.wxLogin().subscribe({
+          userStore.user.wxLogin().subscribe({
             next: (res) => {
               console.log(res);
               subscriber.error("用户未登录");
@@ -57,8 +57,10 @@ const HttpStatus = new Map([
   [
     "4",
     (subscriber: any, res: any) => {
-      subscriber.next(res);
-      subscriber.complete();
+      console.log(404);
+      // subscriber.next(res);
+      // subscriber.complete();
+      subscriber.error(res);
     },
   ],
   [
@@ -105,7 +107,7 @@ export default class Http {
         method,
         header,
         success(res) {
-          console.warn("接口请求成功1：", res);
+          // console.warn("接口请求成功1：", res);
 
           let statusToString = res.statusCode.toString(),
             firstStr = statusToString.charAt(0);
@@ -129,10 +131,10 @@ export default class Http {
             `第${retryCount}次重试。重试的时间间隔${Math.pow(2, retryCount)}秒`
           );
 
-          const random_number_milliseconds = Math.floor(Math.random() * 1000);
-          console.log(
-            Math.pow(2, retryCount) * 1000 + random_number_milliseconds
-          );
+          // const random_number_milliseconds = Math.floor(Math.random() * 1000);
+          // console.log(
+          //   Math.pow(2, retryCount) * 1000 + random_number_milliseconds
+          // );
           // 返回再次执行的通知函数（必须）
           return timer(Math.pow(2, retryCount) * 1000);
         },

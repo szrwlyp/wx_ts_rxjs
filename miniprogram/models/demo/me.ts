@@ -35,6 +35,9 @@ export class Me {
         }
         console.log(res);
       },
+      error: (err: any) => {
+        console.log(err);
+      },
     });
 
     // this.user.wxLogin().subscribe({
