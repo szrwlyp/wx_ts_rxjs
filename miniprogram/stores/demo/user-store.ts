@@ -1,9 +1,16 @@
 import { Store } from "westore";
 import { User, UserOptions } from "../../models/demo/user";
+import { Me } from "../../models/demo/me";
 
-class UserStore extends Store<Pick<User, "motto" | "userInfo">> {
+class UserStore extends Store<{
+  motto: string;
+  userInfo: object;
+  deviceList: any[];
+  peripherals: object;
+}> {
   options: UserOptions | undefined;
   user: User;
+  me: Me;
   userLoginInfo: object;
   constructor(options?: UserOptions) {
     super();
@@ -11,6 +18,8 @@ class UserStore extends Store<Pick<User, "motto" | "userInfo">> {
     this.data = {
       motto: "1111",
       userInfo: {},
+      deviceList: [],
+      peripherals: {},
     };
     this.userLoginInfo = {};
 
@@ -25,7 +34,24 @@ class UserStore extends Store<Pick<User, "motto" | "userInfo">> {
         // this.update("userPage");
       },
     });
+    this.me = new Me({
+      onMeInfoLoaded: () => {
+        console.log(this.me);
+        this.data.deviceList = this.me.deviceList;
+        this.data.peripherals = this.me.peripherals;
+        this.update();
+      },
+    });
     console.log(this.user);
+  }
+
+  // 初始化页面数据
+  init() {
+    this.user.wxLogin().subscribe((next) => {
+      console.log(next);
+      this.me.getDeviceList();
+      this.me.getPeripheralTypes();
+    });
   }
 
   async getUserProfile() {

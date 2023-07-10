@@ -99,7 +99,7 @@ export default class Http {
 
   public request() {
     let { base_url, url, data, method, header } = this;
-    return new Observable((subscriber) => {
+    return new Observable((subscriber: any) => {
       wx.request({
         url: base_url + url,
         data: { ...data, sessionid: wx.getStorageSync("sessionId") },
@@ -126,7 +126,7 @@ export default class Http {
     }).pipe(
       retry({
         count: 2,
-        delay: (_error, retryCount) => {
+        delay: (_error: any, retryCount: number) => {
           console.warn(
             `第${retryCount}次重试。重试的时间间隔${Math.pow(2, retryCount)}秒`
           );

@@ -2,7 +2,7 @@ import { Store } from "westore";
 import { User } from "../../models/demo/user";
 import { Me } from "../../models/demo/me";
 
-class MeStore extends Store<Pick<Me, "deviceList" | "peripherals">> {
+class MeStore extends Store<{ deviceList: any[]; peripherals: object }> {
   user: User;
   me: Me;
   constructor() {
@@ -12,27 +12,27 @@ class MeStore extends Store<Pick<Me, "deviceList" | "peripherals">> {
       peripherals: {},
     };
 
-    this.user = new User();
-    console.log(this.user);
+    this.user = new User({
+      onUserInfoLoaded: () => {
+        console.log(this.user);
+      },
+    });
     this.me = new Me({
       onMeInfoLoaded: () => {
         console.log(this.me);
         this.data.deviceList = this.me.deviceList;
         this.data.peripherals = this.me.peripherals;
         this.update("me");
-        wx.hideLoading();
       },
     });
   }
-
-  getData() {
-    wx.showLoading({ title: "加载中..." });
-
-    this.me.getDeviceList();
-  }
-
-  getTypeData() {
-    this.me.getPeripheralTypes();
+  // 初始化页面数据
+  init() {
+    this.user.wxLogin().subscribe((next) => {
+      console.log(next);
+      this.me.getDeviceList();
+      this.me.getPeripheralTypes();
+    });
   }
 }
 
