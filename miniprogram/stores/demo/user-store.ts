@@ -1,6 +1,7 @@
 import { Store } from "westore";
 import { User, UserOptions } from "../../models/demo/user";
 import { Me } from "../../models/demo/me";
+import meStore from "./me-store";
 
 class UserStore extends Store<{
   motto: string;
@@ -48,7 +49,6 @@ class UserStore extends Store<{
   // 初始化页面数据
   init() {
     this.user.wxLogin().subscribe((next) => {
-      console.log(next);
       this.me.getDeviceList();
       this.me.getPeripheralTypes();
     });

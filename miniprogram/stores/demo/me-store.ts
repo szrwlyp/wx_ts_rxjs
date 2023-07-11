@@ -30,9 +30,14 @@ class MeStore extends Store<{ deviceList: any[]; peripherals: object }> {
   init() {
     this.user.wxLogin().subscribe((next) => {
       console.log(next);
-      this.me.getDeviceList();
-      this.me.getPeripheralTypes();
+      this.me.getMergeRequestApi();
     });
+  }
+  addDevice() {
+    Me.deviceChange();
+    setTimeout(() => {
+      this.me.getDeviceList();
+    }, 1000);
   }
 }
 

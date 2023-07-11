@@ -9,4 +9,7 @@ Page({
     meStore.init();
     console.log("me-show");
   },
+  addDevice() {
+    meStore.addDevice();
+  },
 });

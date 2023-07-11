@@ -2,4 +2,7 @@
     <view wx:for="{{deviceList}}" wx:key="index">
         {{item.name}}
     </view>
+    <view bindtap="addDevice">
+        添加设备
+    </view>
 </view>
